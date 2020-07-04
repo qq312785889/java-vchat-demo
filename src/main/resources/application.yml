@@ -1,0 +1,15 @@
+#服务器端口
+server:
+  port: 8080
+
+#数据库连接配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    name: poot
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/shiro?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+
+# 扫描指定POJO包
+mybatis:
+  type-aliases-package: com.demo.vchat.vchat.domain
