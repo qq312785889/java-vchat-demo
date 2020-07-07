@@ -25,6 +25,8 @@
             `user`
         WHERE
             account = #{account}
+            order by user_create_time desc
+            limit 1
     </select>
     <!--Mybatis新增自动返回最后一个INSERT或 UPDATE 问询为 AUTO_INCREMENT列设置的第一个 发生的值-->
     <!--非自增  UUID-->
@@ -32,10 +34,9 @@
         /*keyProperty="userId" parameterType中的属性值*/
         /*mapper文件中的update,delete,insert语句是不需要设置返回类型的，它们都是默认返回一个int*/
         /*返回的uuid并不一样*/
-        <!--<selectKey keyProperty="userId" resultType="java.lang.Integer" order="AFTER">
-            SELECT
-                uuid()
-        </selectKey>-->
+        <selectKey keyProperty="userId" resultType="java.lang.String" order="BEFORE">
+            SELECT uuid()
+        </selectKey>
         INSERT INTO
             `user`
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -50,7 +51,7 @@
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            uuid(),
+            #{userId},
             <if test="account != null">#{account},</if>
             <if test="password != null">#{password},</if>
             <if test="userName != null">#{userName},</if>

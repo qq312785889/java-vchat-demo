@@ -43,11 +43,11 @@ public class UserRegisterController {
         //验证成功后返回数据
         //return HttpResultUtil.success(registerDto);
         User user = userService.userAccount(registerDto.getAccount());
-        System.out.println(user);
+
         if (user == null) {
-            int userId = userService.userRegister(registerDto);
-            System.out.println("userId:---"+userId);
-            if (userId == 1) {
+            userService.userRegister(registerDto);
+            String userId = registerDto.getUserId();
+            if (userId != null) {
                 return HttpResultUtil.success();
             }else {
                 return HttpResultUtil.error(2,"服务器内部需错误，请联系管理员");
