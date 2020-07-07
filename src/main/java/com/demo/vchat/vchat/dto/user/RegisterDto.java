@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterDto {
+    private String userId;
 
     @NotBlank(message = "账号不能为空！")
     private String account;

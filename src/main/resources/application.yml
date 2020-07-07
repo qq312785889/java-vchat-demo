@@ -4,12 +4,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    name: poot
+    username: root
     password: root
-    url: jdbc:mysql://127.0.0.1:3306/shiro?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/java_vchat?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
 
 mybatis:
   type-aliases-package: com.demo.vchat.vchat.domain
+  mapper-locations: classpath*:com/demo/vchat/vchat/mapper/**/*.xml
 
 springdoc:
   swagger-ui:

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.vchat.vchat.mapper.user.UserMapper">
+    <resultMap id="userResult" type="com.demo.vchat.vchat.domain.User">
+        <id property="userId" column="user_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="account" column="account" javaType="String" jdbcType="VARCHAR"/>
+        <result property="password" column="password" javaType="String" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="userAge" column="user_age" javaType="INTEGER" jdbcType="INTEGER"/>
+        <result property="userSex" column="user_sex" javaType="String" jdbcType="VARCHAR"/>
+        <result property="status" column="status" javaType="INTEGER" jdbcType="INTEGER"/>
+        <result property="userCreateTime" column="user_create_time" javaType="java.sql.Date" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="user_column">
+        user_id,account,password,user_name,user_age,user_sex,status,user_create_time
+    </sql>
+
+    <select id="userAccount" resultMap="userResult">
+        SELECT
+            account
+        FROM
+            `user`
+        WHERE
+            account = #{account}
+    </select>
+    <!--Mybatis新增自动返回最后一个INSERT或 UPDATE 问询为 AUTO_INCREMENT列设置的第一个 发生的值-->
+    <!--非自增  UUID-->
+    <insert id="userRegister" parameterType="com.demo.vchat.vchat.dto.user.RegisterDto">
+        /*keyProperty="userId" parameterType中的属性值*/
+        /*mapper文件中的update,delete,insert语句是不需要设置返回类型的，它们都是默认返回一个int*/
+        /*返回的uuid并不一样*/
+        <!--<selectKey keyProperty="userId" resultType="java.lang.Integer" order="AFTER">
+            SELECT
+                uuid()
+        </selectKey>-->
+        INSERT INTO
+            `user`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_id,
+            <if test="account != null">account,</if>
+            <if test="password != null">password,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userAge != null">user_age,</if>
+            <if test="userSex != null">user_sex,</if>
+            status,
+            user_create_time
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            uuid(),
+            <if test="account != null">#{account},</if>
+            <if test="password != null">#{password},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userAge != null">#{userAge},</if>
+            <if test="userSex != null">#{userSex},</if>
+            1,
+            now()
+        </trim>
+    </insert>
+
+</mapper>

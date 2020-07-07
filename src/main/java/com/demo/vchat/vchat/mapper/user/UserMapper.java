@@ -1,7 +1,7 @@
-package com.demo.vchat.vchat.mapper;
+package com.demo.vchat.vchat.mapper.user;
 
 import com.demo.vchat.vchat.domain.User;
-import org.apache.ibatis.annotations.Param;
+import com.demo.vchat.vchat.dto.user.RegisterDto;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,9 +14,9 @@ public interface UserMapper {
     User userAccount(String account);
     /**
      * 账号注册
-     * @param account
-     * @param password
+     * @param registerDto
      * @return String user_id
      */
-    String userRegister(@Param("account") String account,@Param("password") String password);
+    //mapper文件中的update,delete,insert语句是不需要设置返回类型的，它们都是默认返回一个int
+    Integer userRegister(RegisterDto registerDto);
 }

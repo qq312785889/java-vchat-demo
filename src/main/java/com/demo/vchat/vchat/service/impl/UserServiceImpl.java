@@ -1,7 +1,8 @@
 package com.demo.vchat.vchat.service.impl;
 
 import com.demo.vchat.vchat.domain.User;
-import com.demo.vchat.vchat.mapper.UserMapper;
+import com.demo.vchat.vchat.dto.user.RegisterDto;
+import com.demo.vchat.vchat.mapper.user.UserMapper;
 import com.demo.vchat.vchat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String userRegister(String account, String password) {
-        return userMapper.userRegister(account, password);
+    public Integer userRegister(RegisterDto registerDto) {
+        return userMapper.userRegister(registerDto);
     }
 }

@@ -1,6 +1,7 @@
 package com.demo.vchat.vchat.controller.user;
 
 import com.demo.vchat.vchat.domain.HttpResultMassage;
+import com.demo.vchat.vchat.domain.User;
 import com.demo.vchat.vchat.dto.user.RegisterDto;
 import com.demo.vchat.vchat.service.UserService;
 import com.demo.vchat.vchat.util.HttpResultUtil;
@@ -32,15 +33,28 @@ public class UserRegisterController {
     @Autowired
     private UserService userService;
 
-    @Tag(name = "用户注册",description = "这是用户注册的接口")
-    @PostMapping(value = "/userRegister",produces = "application/json")
-    public HttpResultMassage<RegisterDto> userRegister(@Valid @RequestBody RegisterDto registerDto, Errors errors){
+    @Tag(name = "用户注册", description = "这是用户注册的接口")
+    @PostMapping(value = "/userRegister", produces = "application/json")
+    public HttpResultMassage<RegisterDto> userRegister(@Valid @RequestBody RegisterDto registerDto, Errors errors) {
         //表单验证
-        if(errors.hasErrors()){
-            return HttpResultUtil.error(1,errors.getFieldError().getDefaultMessage());
+        if (errors.hasErrors()) {
+            return HttpResultUtil.error(1, errors.getFieldError().getDefaultMessage());
         }
         //验证成功后返回数据
-        return HttpResultUtil.success(registerDto);
+        //return HttpResultUtil.success(registerDto);
+        User user = userService.userAccount(registerDto.getAccount());
+        System.out.println(user);
+        if (user == null) {
+            int userId = userService.userRegister(registerDto);
+            System.out.println("userId:---"+userId);
+            if (userId == 1) {
+                return HttpResultUtil.success();
+            }else {
+                return HttpResultUtil.error(2,"服务器内部需错误，请联系管理员");
+            }
+        } else {
+            return HttpResultUtil.error(2, "账号已存在，请重新输入");
+        }
 
     }
 
