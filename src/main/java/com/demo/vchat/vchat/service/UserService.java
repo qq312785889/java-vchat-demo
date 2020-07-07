@@ -2,7 +2,7 @@ package com.demo.vchat.vchat.service;
 
 import com.demo.vchat.vchat.domain.User;
 import org.apache.ibatis.annotations.Param;
-
+//这的注解没了
 public interface UserService {
     /**
      * 账号是否存在

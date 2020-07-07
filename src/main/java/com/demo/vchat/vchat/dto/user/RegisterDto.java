@@ -1,10 +1,14 @@
-package com.demo.vchat.vchat.rule.user;
+package com.demo.vchat.vchat.dto.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterDto {
 
     @NotBlank(message = "账号不能为空！")
