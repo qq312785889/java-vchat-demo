@@ -3,6 +3,8 @@ package com.demo.vchat.vchat.domain;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
+
 @Data
 public class User {
     private String userId;
@@ -14,5 +16,9 @@ public class User {
     private Integer status;
     //格式化时间  和数据库格式一样  select now()
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String userCreateTime;
+    private Date userCreateTime;
+    private String salt;
+    private Integer userRoleId;
+    private Integer locked;
+
 }

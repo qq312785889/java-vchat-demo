@@ -5,6 +5,7 @@ import com.demo.vchat.vchat.domain.User;
 import com.demo.vchat.vchat.dto.user.RegisterDto;
 import com.demo.vchat.vchat.service.UserService;
 import com.demo.vchat.vchat.util.HttpResultUtil;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,5 +58,18 @@ public class UserRegisterController {
         }
 
     }
+
+    @Hidden
+    @RequestMapping("/test")
+    public String test(){
+        return "111";
+    }
+
+
+
+
+
+
+
 
 }
