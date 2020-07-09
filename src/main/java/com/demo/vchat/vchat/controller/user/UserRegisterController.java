@@ -60,6 +60,7 @@ public class UserRegisterController {
     }
 
     @Hidden
+    @Tag(name = "这是一个test接口", description = "不过我被隐藏了，在swagger ui上面找不到我")
     @RequestMapping("/test")
     public String test(){
         return "111";
