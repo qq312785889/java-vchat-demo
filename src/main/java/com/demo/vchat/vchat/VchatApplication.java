@@ -16,6 +16,7 @@ public class VchatApplication extends SpringBootServletInitializer {
         return builder.sources(VchatApplication.class);
     }
 
+
     public static void main(String[] args) {
         SpringApplication.run(VchatApplication.class, args);
     }

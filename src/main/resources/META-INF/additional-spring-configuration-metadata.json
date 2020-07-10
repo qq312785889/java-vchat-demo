@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "server.servlet.context-path.classpath",
+      "type": "java.lang.String",
+      "description": "Description for server.servlet.context-path.classpath."
+  }
+] }
