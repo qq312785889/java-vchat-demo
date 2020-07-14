@@ -17,8 +17,19 @@
         <result property="locked" column="locked" javaType="Integer" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap id="accessToken" type="com.demo.vchat.vchat.domain.AccessToken">
+        <result property="accessToken" column="access_token" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="expiresTime" column="expires_time" javaType="java.sql.Date" jdbcType="DATE"/>
+        <result property="saveTime" column="save_time" javaType="java.sql.Date" jdbcType="DATE"/>
+        <result property="jsapiTicket" column="jsapi_ticket" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <sql id="user_column">
         id,account,password,user_name,user_age,user_sex,status,user_create_time,salt,role_id,locked
+    </sql>
+
+    <sql id="accessToken_column">
+        access_token,expires_time,save_time,jsapi_ticket
     </sql>
 
     <select id="userAccount" resultMap="userResult">
@@ -66,6 +77,24 @@
             0,
             0,
         </trim>
+    </insert>
+
+    <select id="getAccessToken" resultMap="accessToken">
+        SELECT
+            <include refid="accessToken_column"/>
+        FROM
+            access_token
+    </select>
+
+    <update id="clearAccessToken" parameterType="int">
+        TRUNCATE TABLE access_token
+    </update>
+
+    <insert id="saveAccessToken" parameterType="java.lang.String">
+        INSERT INTO
+            access_token(access_token,expires_time,save_time,jsapi_ticket)
+            VALUES
+            (#{accessToken},DATE_ADD(NOW(),INTERVAL 2 HOUR),NOW(),#{jsapiTicket})
     </insert>
 
 </mapper>

@@ -38,6 +38,8 @@ public class ShiroConfig {
         Map<String,String> filterMap = new LinkedHashMap<String,String>();
         filterMap.put("/userApi/userRegister","anon");
         filterMap.put("/toH5","anon");
+        filterMap.put("/userApi/getAccessToken","anon");
+        filterMap.put("/testWx","anon");
         filterMap.put("/userApi/*","authc");
 
         //授权过滤器
