@@ -10,14 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static cn.hutool.crypto.SecureUtil.sha1;
-import static jdk.internal.org.objectweb.asm.Type.getType;
 
 @Component
 public class VchatUtil {
@@ -55,36 +49,34 @@ public class VchatUtil {
 
 
     //判断数据库中accessToken和JSTicket是否存在和过期
-    public void accessToken(){
+    public AccessToken accessToken() {
         AccessToken accessToken = userMapper.getAccessToken();
         if (accessToken == null){
-            System.out.println("accessToken为空，进行创建");
             AccessToken token = getAccessToken();
-            System.out.println("输出token："+token);
-            System.out.println("输出token值："+token.getAccessToken());
-            System.out.println("输出token类型："+getType(token.getAccessToken()));
-            System.out.println("...类型出错啦，转成String类型吧！");
             String str = token.getAccessToken();
-            System.out.println("输出str类型："+getType(str));
-            System.out.println("开始写入数据库！");
             userMapper.saveAccessToken(str,token.getJsapiTicket());
-            System.out.println("写入完成啦！");
+            accessToken();
         }else {
             //判断是否过期
-            Date endTime = accessToken.getExpiresTime();
-            Date startTime = accessToken.getSaveTime();
+            Date expiresTime = accessToken.getExpiresTime();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String time1 = simpleDateFormat.format(expiresTime);
+            Date endTime = DateUtil.parseDateTime(time1);
+            Date saveTime = accessToken.getSaveTime();
+            String time2 = simpleDateFormat.format(saveTime);
+            Date startTime = DateUtil.parseDateTime(time2);
             String str = DateUtil.now();
-            Date nowDate = DateUtil.parseDate(str);
+            Date nowDate = DateUtil.parseDateTime(str);
             boolean flag = DateUtil.isIn(nowDate,startTime,endTime);
             if (!flag){
                 //重新获取
                 userMapper.clearAccessToken();
                 accessToken();
+            }else {
+                return accessToken;
             }
-
-
-
         }
+        return null;
     }
 
     //RestTemplate 使用get发送请求

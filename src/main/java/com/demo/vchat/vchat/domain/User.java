@@ -3,7 +3,7 @@ package com.demo.vchat.vchat.domain;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.sql.Date;
 
 @Data
 public class User {

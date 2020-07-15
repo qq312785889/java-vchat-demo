@@ -73,7 +73,6 @@ public class UserRegisterController {
         if (errors.hasErrors()) {
             return HttpResultUtil.error(1, errors.getFieldError().getDefaultMessage());
         }
-        System.out.println("111:==="+loginDto.getAccessToken());
         if (loginDto.getAccessToken().equals("")){
             RestTemplate restTemplate = new RestTemplate();//发送request请求
             String param = "?grant_type=client_credential&appid="+loginDto.getAppId()+"&secret="+loginDto.getAppSecret();

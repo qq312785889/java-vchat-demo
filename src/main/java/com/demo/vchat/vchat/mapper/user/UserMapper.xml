@@ -11,7 +11,7 @@
         <result property="userAge" column="user_age" javaType="INTEGER" jdbcType="INTEGER"/>
         <result property="userSex" column="user_sex" javaType="String" jdbcType="VARCHAR"/>
         <result property="status" column="status" javaType="INTEGER" jdbcType="INTEGER"/>
-        <result property="userCreateTime" column="user_create_time" javaType="java.sql.Date" jdbcType="DATE"/>
+        <result property="userCreateTime" column="user_create_time" jdbcType="TIMESTAMP"/>
         <result property="salt" column="salt" javaType="String" jdbcType="VARCHAR"/>
         <result property="userRoleId" column="role_id" javaType="Integer" jdbcType="INTEGER"/>
         <result property="locked" column="locked" javaType="Integer" jdbcType="INTEGER"/>
@@ -19,8 +19,8 @@
 
     <resultMap id="accessToken" type="com.demo.vchat.vchat.domain.AccessToken">
         <result property="accessToken" column="access_token" javaType="java.lang.String" jdbcType="VARCHAR"/>
-        <result property="expiresTime" column="expires_time" javaType="java.sql.Date" jdbcType="DATE"/>
-        <result property="saveTime" column="save_time" javaType="java.sql.Date" jdbcType="DATE"/>
+        <result property="expiresTime" column="expires_time" jdbcType="TIMESTAMP"/>
+        <result property="saveTime" column="save_time" jdbcType="TIMESTAMP"/>
         <result property="jsapiTicket" column="jsapi_ticket" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
 
