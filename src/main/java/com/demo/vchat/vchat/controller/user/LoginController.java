@@ -1,21 +1,30 @@
 package com.demo.vchat.vchat.controller.user;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
+import com.demo.vchat.vchat.domain.HttpResultMassage;
+import com.demo.vchat.vchat.domain.OpenId;
+import com.demo.vchat.vchat.dto.user.VchatDto;
+import com.demo.vchat.vchat.util.HttpResultUtil;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
+/**
+ * @author 宁缺毋滥
+ */
 @RestController
 @Validated
 @RequestMapping("/loginApi")
-@OpenAPIDefinition(
-        info = @Info(
-                title = "这是login相关的接口",
-                version = "1.0",
-                description = "这是登录相关的接口信息"
-
-        )
-)
 public class LoginController {
+
+    @GetMapping(value = "/login", produces = "application/json")
+    public HttpResultMassage<OpenId> userLogin(@RequestBody @Valid VchatDto vchatDto, Errors errors) {
+        if (errors.hasErrors()){
+            return HttpResultUtil.error(1,errors.getFieldError().getDefaultMessage());
+        }
+        return null;
+    }
+
+
 }

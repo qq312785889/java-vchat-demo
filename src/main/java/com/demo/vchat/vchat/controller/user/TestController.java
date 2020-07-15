@@ -5,6 +5,7 @@ import com.demo.vchat.vchat.domain.HttpResultMassage;
 import com.demo.vchat.vchat.util.HttpResultUtil;
 import com.demo.vchat.vchat.util.VchatUtil;
 import io.swagger.v3.oas.annotations.Hidden;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +23,10 @@ public class TestController {
             return "test/H5pages.html";
         }
 
-        @Autowired
-        private VchatUtil vchatUtil;
 
         @GetMapping("/test")
         public HttpResultMassage<AccessToken> test() {
-                AccessToken accessToken = vchatUtil.accessToken();
+                AccessToken accessToken = VchatUtil.accessToken();
                 System.out.println(accessToken);
                 return HttpResultUtil.success(accessToken);
         }

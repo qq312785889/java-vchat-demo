@@ -17,10 +17,13 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
+
+    @Bean
     /*
-    * 创建ShiroFilterFactoryBean
-    * */
-    @Bean  //一个接口有多个实现类，@Qualifier指明@Autowired具体注入哪个实现类
+     * 创建ShiroFilterFactoryBean
+     *
+     * 一个接口有多个实现类，@Qualifier指明@Autowired具体注入哪个实现类
+     * */
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier(value = "securityManager") DefaultWebSecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         //设置安全管理器
@@ -51,9 +54,7 @@ public class ShiroConfig {
          *         |---资源:操作:实例【user:create:01：表示对用户资源的01实例进行create操作】
          *         |
          *         |---例子：【user:*:01表示对用户资源的01实例进行所有操作】
-         * ————————————————
-         * 版权声明：本文为CSDN博主「老猫烧须」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-         * 原文链接：https://blog.csdn.net/nthack5730/article/details/51019451
+         * 资源标识符：操作，即是资源级别的粒度；
          */
 
         //修改调整的登录页
