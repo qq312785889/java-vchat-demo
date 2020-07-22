@@ -4,17 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.demo.vchat.vchat.mapper.user.UserMapper">
     <resultMap id="userResult" type="com.demo.vchat.vchat.domain.User">
-        <id property="userId" column="user_id" javaType="String" jdbcType="VARCHAR"/>
-        <result property="account" column="account" javaType="String" jdbcType="VARCHAR"/>
-        <result property="password" column="password" javaType="String" jdbcType="VARCHAR"/>
-        <result property="userName" column="user_name" javaType="String" jdbcType="VARCHAR"/>
-        <result property="userAge" column="user_age" javaType="INTEGER" jdbcType="INTEGER"/>
-        <result property="userSex" column="user_sex" javaType="String" jdbcType="VARCHAR"/>
-        <result property="status" column="status" javaType="INTEGER" jdbcType="INTEGER"/>
-        <result property="userCreateTime" column="user_create_time" jdbcType="TIMESTAMP"/>
-        <result property="salt" column="salt" javaType="String" jdbcType="VARCHAR"/>
-        <result property="userRoleId" column="role_id" javaType="Integer" jdbcType="INTEGER"/>
+        <id property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="openId" column="open_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="sessionKey" column="session_key" javaType="String" jdbcType="VARCHAR"/>
         <result property="locked" column="locked" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="unionId" column="union_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="roleId" column="role_id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR" javaType="String"/>
     </resultMap>
 
     <resultMap id="accessToken" type="com.demo.vchat.vchat.domain.AccessToken">
@@ -25,7 +22,7 @@
     </resultMap>
 
     <sql id="user_column">
-        id,account,password,user_name,user_age,user_sex,status,user_create_time,salt,role_id,locked
+        id,open_id,session_key,locked,union_id,last_login_time,role_id,salt
     </sql>
 
     <sql id="accessToken_column">
@@ -43,7 +40,7 @@
     <!--Mybatis新增自动返回最后一个INSERT或 UPDATE 问询为 AUTO_INCREMENT列设置的第一个 发生的值-->
     <!--非自增  UUID-->
     <insert id="userRegister" parameterType="com.demo.vchat.vchat.dto.user.RegisterDto">
-        /*keyProperty="userId" parameterType中的属性值*/
+        /*keyProperty="userId" parameterType中的属性值  LAST_INSERT_ID()*/
         /*mapper文件中的update,delete,insert语句是不需要设置返回类型的，它们都是默认返回一个int*/
         <selectKey keyProperty="userId" resultType="java.lang.String" order="BEFORE">
             SELECT uuid()
@@ -85,9 +82,22 @@
         FROM
             access_token
     </select>
+    <select id="findUserByOpenId" resultMap="userResult">
+        SELECT
+            <include refid="user_column"/>
+        FROM
+            sys_users
+        where open_id = #{openid}
+    </select>
 
     <update id="clearAccessToken" parameterType="int">
         TRUNCATE TABLE access_token
+    </update>
+    <update id="saveSalt">
+        UPDATE
+        sys_users
+        SET salt = #{salt}
+        WHERE id = #{id}
     </update>
 
     <insert id="saveAccessToken" parameterType="java.lang.String">
@@ -95,6 +105,28 @@
             access_token(access_token,expires_time,save_time,jsapi_ticket)
             VALUES
             (#{accessToken},DATE_ADD(NOW(),INTERVAL 2 HOUR),NOW(),#{jsapiTicket})
+    </insert>
+    <insert id="addUser" parameterType="com.demo.vchat.vchat.domain.User">
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO
+            sys_users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openId != null">open_id,</if>
+            <if test="sessionKey != null">session_key,</if>
+            <if test="salt != null">salt,</if>
+            <if test="unionId != null">union_id,</if>
+            last_login_time,
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openId != null">#{openId},</if>
+            <if test="sessionKey != null">#{sessionKey},</if>
+            <if test="salt != null">#{salt},</if>
+            <if test="unionId != null">#{unionId},</if>
+            now(),
+        </trim>
     </insert>
 
 </mapper>

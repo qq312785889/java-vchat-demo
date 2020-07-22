@@ -4,9 +4,13 @@ import com.demo.vchat.vchat.domain.User;
 import com.demo.vchat.vchat.dto.user.RegisterDto;
 import com.demo.vchat.vchat.mapper.user.UserMapper;
 import com.demo.vchat.vchat.service.UserService;
+import com.demo.vchat.vchat.util.VchatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author 宁缺毋滥
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -23,4 +27,11 @@ public class UserServiceImpl implements UserService {
     public Integer userRegister(RegisterDto registerDto) {
         return userMapper.userRegister(registerDto);
     }
+
+
+
+
+
+
+
 }

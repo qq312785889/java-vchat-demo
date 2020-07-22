@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.demo.vchat.vchat.config.VchatDate;
 import com.demo.vchat.vchat.domain.AccessToken;
 import com.demo.vchat.vchat.domain.JSTicket;
-import com.demo.vchat.vchat.domain.OpenId;
+import com.demo.vchat.vchat.domain.User;
 import com.demo.vchat.vchat.mapper.user.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -71,11 +71,11 @@ public class VchatUtil {
      * @param code
      * @return OpenId
      */
-    public static OpenId getOpenId(String code){
+    public static User getOpenId(String code){
         String param = "?appid="+VchatDate.APPID+"&secret="+VchatDate.SECRET+"&js_code="+code+"&grant_type=authorization_code";
         String url = "https://api.weixin.qq.com/sns/jscode2session"+param;
         JSONObject jsonObject = doGetStr(url);
-        OpenId openId = new OpenId();
+        User openId = new User();
         openId.setOpenId(jsonObject.getString("openid"));
         openId.setSessionKey(jsonObject.getString("session_key"));
         openId.setUnionId(jsonObject.getString("unionid"));

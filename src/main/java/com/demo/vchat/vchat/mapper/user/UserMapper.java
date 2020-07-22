@@ -4,6 +4,7 @@ import com.demo.vchat.vchat.domain.AccessToken;
 import com.demo.vchat.vchat.domain.User;
 import com.demo.vchat.vchat.dto.user.RegisterDto;
 import org.apache.ibatis.annotations.Param;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,5 +32,22 @@ public interface UserMapper {
     Integer clearAccessToken();
 
     Integer saveAccessToken(@Param("accessToken") String accessToken, @Param("jsapiTicket") String jsapiTicket);
+
+    /**
+     * 数据库添加用户
+     * @param User
+     * @return
+     */
+    Integer addUser(User User);
+
+    /**
+     * 保存盐值
+     * @param salt
+     * @param id
+     * @return
+     */
+    Integer saveSalt(@Param("salt") String salt,@Param("id") int id);
+
+    User findUserByOpenId(String openid);
 
 }

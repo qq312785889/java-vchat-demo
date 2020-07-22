@@ -1,5 +1,6 @@
 package com.demo.vchat.vchat.shiro;
 
+import com.demo.vchat.vchat.realm.UserRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -74,7 +75,7 @@ public class ShiroConfig {
      * 里面主要定义了登录、创建subject、登出等操作
      */
     @Bean(name="securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier(value = "userRealm")UserRealm userRealm){
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier(value = "userRealm") UserRealm userRealm){
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         defaultWebSecurityManager.setRealm(userRealm);
         return defaultWebSecurityManager;

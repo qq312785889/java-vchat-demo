@@ -1,15 +1,22 @@
-package com.demo.vchat.vchat.shiro;
+package com.demo.vchat.vchat.realm;
 
+import cn.hutool.core.util.RandomUtil;
 import com.demo.vchat.vchat.domain.User;
+import com.demo.vchat.vchat.mapper.user.UserMapper;
 import com.demo.vchat.vchat.service.UserService;
-import org.apache.shiro.SecurityUtils;
+import com.demo.vchat.vchat.util.VchatUtil;
+import io.fusionauth.jwt.Signer;
+import io.fusionauth.jwt.domain.JWT;
+import io.fusionauth.jwt.hmac.HMACSigner;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.ZonedDateTime;
 
 /**
  * 自定义Realm
@@ -19,11 +26,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  * （3）AuthenticatingRealm、AuthorizingRealm这两个类都是shiro中提供了一些线程的realm接口
  * （4）在与spring整合项目中，shiro的SecurityManager会自动调用这两个方法，从而实现认证和授权，可以结合shiro的CacheManager将认证和授权信息保存在缓存中，
  * 这样可以提高系统的处理效率。
+ * @author 宁缺毋滥
  */
 public class UserRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     /**
      * 执行授权逻辑
@@ -57,34 +69,45 @@ public class UserRealm extends AuthorizingRealm {
 
     }
 
+
+    @Override
     /**
      * 执行认证逻辑
      * @param authenticationToken
      * @return
      * @throws AuthenticationException
      */
-    @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("执行认证逻辑");
+        UsernamePasswordToken usernamePasswordToken =(UsernamePasswordToken) authenticationToken;
+        User user = VchatUtil.getOpenId(usernamePasswordToken.getUsername());
+        String jwtToken = null;
+        if(user.getErrCode() == null) {
+            int id;
+            //是否为第一次登陆
+            User findUser= userMapper.findUserByOpenId(user.getOpenId());
+            if (findUser == null){
+                id = userMapper.addUser(user);
+            }else {
+                id=findUser.getId();
+            }
+            String salt = RandomUtil.randomString(16);
+            userMapper.saveSalt(salt, id);
+            Signer signer = HMACSigner.newSHA256Signer(salt);
+            JWT jwt = new JWT()
+                    .setExpiration(ZonedDateTime.now().plusMinutes(120))
+                    .setUniqueId("javano1");
+            jwt.addClaim("open_id", user.getOpenId());
 
-        //编写shiro判断逻辑，判断用户名和密码
-        //1.判断用户名  token中的用户信息是登录时候传进来的
-        UsernamePasswordToken token = (UsernamePasswordToken)authenticationToken;
-        System.out.println("token:"+token.getUsername());
-//        User user = userService.findByName(token.getUsername());
-//        if (user==null){
-//            //用户名不存在
-//            return null;//shiro底层会抛出UnknowAccountException
-//        }
+            jwtToken = id + ":" + JWT.getEncoder().encode(jwt, signer);
+        }
 
-
-        //2.判断密码
-        //第二个字段是user.getPassword()，注意这里是指从数据库中获取的password。第三个字段是realm，即当前realm的名称。
-        //这块对比逻辑是先对比username，但是username肯定是相等的，所以真正对比的是password。
-        //从这里传入的password（这里是从数据库获取的）和token（filter中登录时生成的）中的password做对比，如果相同就允许登录，
-        // 不相同就抛出IncorrectCredentialsException异常。
-        //如果认证不通过，就不会执行下面的授权方法了
-        //return new SimpleAuthenticationInfo(user,user.getPassword(),"UserRealm");
-        return null;
+        return new SimpleAuthenticationInfo(jwtToken, true, "UserRealm");
+    }
+    /**
+     * 注意坑点 : 密码校验 , 这里因为是JWT形式,就无需密码校验和加密,直接让其返回为true(如果不设置的话,该值默认为false,即始终验证不通过)
+     */
+    private CredentialsMatcher credentialsMatcher() {
+        return (token, info) -> true;
     }
 }
