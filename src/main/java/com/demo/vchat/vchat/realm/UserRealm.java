@@ -95,19 +95,15 @@ public class UserRealm extends AuthorizingRealm {
             userMapper.saveSalt(salt, id);
             Signer signer = HMACSigner.newSHA256Signer(salt);
             JWT jwt = new JWT()
-                    .setExpiration(ZonedDateTime.now().plusMinutes(120))
                     .setUniqueId("javano1");
             jwt.addClaim("open_id", user.getOpenId());
 
             jwtToken = id + ":" + JWT.getEncoder().encode(jwt, signer);
         }
+        //自定义密码，与前台传值相同  微信登录不需要验证密码
+        String password = "true";
 
-        return new SimpleAuthenticationInfo(jwtToken, true, "UserRealm");
+        return new SimpleAuthenticationInfo(jwtToken, password, "UserRealm");
     }
-    /**
-     * 注意坑点 : 密码校验 , 这里因为是JWT形式,就无需密码校验和加密,直接让其返回为true(如果不设置的话,该值默认为false,即始终验证不通过)
-     */
-    private CredentialsMatcher credentialsMatcher() {
-        return (token, info) -> true;
-    }
+
 }

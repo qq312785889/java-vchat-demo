@@ -1,4 +1,4 @@
-package com.demo.vchat.vchat.config;
+package com.demo.vchat.vchat.dto;
 
 /**
  * @author 宁缺毋滥

@@ -1,10 +1,16 @@
 package com.demo.vchat.vchat.interceptor;
 
+import com.demo.vchat.vchat.mapper.user.UserMapper;
+import io.fusionauth.jwt.Verifier;
 import io.fusionauth.jwt.domain.JWT;
+import io.fusionauth.jwt.hmac.HMACVerifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 
 /**
  * 自定义拦截器
@@ -20,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  *     2、判断用户是否具有访问当前接口的权限
  * @author 宁缺毋滥
  */
+@Component
 public class JwtInterceptor extends HandlerInterceptorAdapter {
     /**
      *
@@ -29,13 +36,29 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
      * @return
      * @throws Exception
      */
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorization = request.getHeader("Authorization");
-        JWT decode = JWT.getDecoder().decode(authorization);
+        //使用limit，最多分割成2个字符串
+        String[] strarray=authorization.split(":",2);
+        int id = Integer.parseInt(strarray[0]);
+        String salt = userMapper.findSaltById(id);
+        Verifier verifier = HMACVerifier.newVerifier(salt);
+        try {
+            JWT decode = JWT.getDecoder().decode(strarray[1],verifier);
+            if ("javano1".equals(decode.uniqueId)){
+                return true;
+            }
+            response.addHeader("errorCode","-1");
+            return false;
+        }catch (Exception e){
+            return false;
+        }
 
+        //super.preHandle(request, response, handler)
 
-        return super.preHandle(request, response, handler);
     }
 }

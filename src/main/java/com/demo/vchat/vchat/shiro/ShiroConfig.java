@@ -45,6 +45,8 @@ public class ShiroConfig {
         filterMap.put("/userApi/getAccessToken","anon");
         filterMap.put("/testWx","anon");
         filterMap.put("/userApi/*","authc");
+        filterMap.put("/test/*","anon");
+        filterMap.put("/errorApi/loginError","anon");
 
         //授权过滤器
         //注意：当前授权拦截后，shiro会自动跳转到未授权页面

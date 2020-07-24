@@ -89,6 +89,13 @@
             sys_users
         where open_id = #{openid}
     </select>
+    <select id="findSaltById" resultType="java.lang.String">
+        SELECT salt
+        FROM
+            sys_users
+        WHERE
+            id = #{id}
+    </select>
 
     <update id="clearAccessToken" parameterType="int">
         TRUNCATE TABLE access_token

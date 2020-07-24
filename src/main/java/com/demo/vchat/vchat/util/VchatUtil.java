@@ -3,7 +3,7 @@ package com.demo.vchat.vchat.util;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.demo.vchat.vchat.config.VchatDate;
+import com.demo.vchat.vchat.dto.VchatDate;
 import com.demo.vchat.vchat.domain.AccessToken;
 import com.demo.vchat.vchat.domain.JSTicket;
 import com.demo.vchat.vchat.domain.User;

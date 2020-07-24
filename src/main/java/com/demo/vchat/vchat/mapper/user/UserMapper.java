@@ -48,6 +48,12 @@ public interface UserMapper {
      */
     Integer saveSalt(@Param("salt") String salt,@Param("id") int id);
 
+    /**
+     * 根据openid查询用户信息
+     * @param openid
+     * @return
+     */
     User findUserByOpenId(String openid);
 
+    String findSaltById(int id);
 }

@@ -4,14 +4,15 @@ import lombok.Data;
 
 /**
  * Http请求返回的最外层对象
+ * @author 宁缺毋滥
  * @param <T>
  */
 @Data
 public class HttpResultMassage<T> {
-    /*错误码*/
+    /**错误码*/
     private Integer code;
-    /*提示信息*/
+    /**提示信息*/
     private String msg;
-    /*具体内容*/
+    /**具体内容*/
     private T data;
 }
